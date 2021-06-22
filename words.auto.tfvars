@@ -1,0 +1,1 @@
+words = ["alma", "szilva", "eper"]
