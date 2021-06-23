@@ -9,23 +9,36 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+  - job: MyJob
+    displayName: My First Job
+    continueOnError: true
+    workspace:
+      clean: outputs
+    steps:
+      - script: echo Hello, world!
+        displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+      - script: |
+          echo Add other tasks to build, test, and deploy your project.
+          echo See https://aka.ms/yaml
+        displayName: 'Run a multi-line script'
 
-- task: CopyFiles@2
-  inputs:
-    contents: '**/*.tf'
-    targetFolder: $(build.artifactstagingdirectory)
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.tf'
+          targetFolder: $(build.artifactstagingdirectory)
 
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: $(build.artifactstagingdirectory)
-    artifactName: 'tf_files'
-    artifactType: 'pipeline'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: $(build.artifactstagingdirectory)
+          artifactName: 'tf_files'
+          artifactType: 'pipeline'
 
+  - job: MyJob2
+      displayName: My First Job
+      continueOnError: true
+      workspace:
+        clean: outputs
+      steps:
+        - script: echo My first job
