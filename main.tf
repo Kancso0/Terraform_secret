@@ -16,14 +16,21 @@ provider "azurerm" {
   }
 }
 
-data "azurerm_resource_group" "this" {
-  name = "Akademia1"
-}
-
 module "childmodule" {
   source = "./modules"
   textlength = 10
 }
+
+
+data "azurerm_resource_group" "this" {
+  name = "Akademia1"
+}
+
+data "azurerm_key_vault_secret" "this" {
+  name         = module.childmodule.secret_name
+  key_vault_id = module.childmodule.kv_id
+}
+
 
 resource "azurerm_storage_account" "this" {
   name                     = "jancsostorage02"
@@ -47,7 +54,7 @@ resource "azurerm_storage_blob" "this" {
   storage_account_name   = azurerm_storage_account.this.name
   storage_container_name = azurerm_storage_container.this.name
   type                   = "Block"
-  source_content         = upper("${module.childmodule.kv_id}")
+  source_content         = upper(data.azurerm_key_vault_secret.this.value)
 }
 
 
