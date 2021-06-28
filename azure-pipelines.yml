@@ -12,7 +12,7 @@ stages :
         continueOnError: false
         steps:
           - task: TerraformInstaller
-              displayName: install terraform
+              displayName: 'install terraform'
               inputs:
                 terraformVersion: latest
 
