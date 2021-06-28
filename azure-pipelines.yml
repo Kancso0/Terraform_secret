@@ -5,30 +5,36 @@ pool:
   vmImage: ubuntu-latest
 
 
-jobs:
+stages :
+  - stage: install terraform
+    jobs:
+      - job: install
+        continueOnError: false
+        steps:
+          - task: TerraformInstaller
+              displayName: install terraform
+              inputs:
+                terraformVersion: latest
 
-  - job: FirstJob
-    displayName: MyJob
-    steps:
-      - script: echo Hello, world!
-        displayName: 'Run a one-line script'
+  - stage: terraform init
+    jobs:
+      - job: init
+        steps:
+          - task: TerraformCLI
+              displayName: 'terraform init'
+              inputs:
+                command: init
+                backendType: azurerm
+                backendServiceArm: 'eteo-akademia-devops_test-dev'
+                ensureBackend: true
+                backendAzureRmResourceGroupName: 'Akademia1'
+                backendAzureRmResourceGroupLocation: 'West Europe'
+                backendAzureRmStorageAccountName: 'jancsostorage02'
+                backendAzureRmContainerName: 'content'
+                backendAzureRmKey: terraform.tfstate
 
-      - script: |
-          echo Add other tasks to build, test, and deploy your project.
-          echo See https://aka.ms/yaml
-        displayName: 'Run a multi-line script'
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.tf'
-          targetFolder: $(build.artifactstagingdirectory)
-
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: $(build.artifactstagingdirectory)
-          artifactName: 'tf_files'
-          artifactType: 'pipeline'
-
-  - job: SecondJob
-    steps:
-      - script: echo Third step!
-        displayName: 'Run a one-line script'
+          - task: TerraformCLI
+              displayName: 'terraform apply'
+              inputs:
+                command: apply -var="textlength=10"
+                environmentServiceName: 'eteo-akademia-devops_test-dev'
