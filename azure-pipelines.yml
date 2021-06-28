@@ -6,35 +6,56 @@ pool:
 
 
 stages :
-  - stage: 'install terraform'
+  - stage: validate
     jobs:
-      - job: 'install'
+      - job: validate
         continueOnError: false
         steps:
           - task: TerraformInstaller@0
-              displayName: 'install terraform'
-              inputs:
-                terraformVersion: latest
+            displayName: 'install'
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformTaskV1@0
+            displayName: 'init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'eteo-akademia-devops_test-dev'
+              backendAzureRmResourceGroupName: 'Akademia1'
+              backendAzureRmStorageAccountName: 'jancsostorage02'
+              backendAzureRmContainerName: 'content'
+              backendAzureRmKey: 'terraform.tfstate'
+          - task: TerraformTaskV1@0
+            displayName: 'validate'
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
 
-  - stage: 'terraform init'
+  - stage: plan
+    dependsOn: [validate]
+    condition: succeeded('validate')
     jobs:
-      - job: 'init'
+      - job: terraform_plan_develop
         steps:
-          - task: TerraformCLI@0
-              displayName: 'terraform init'
-              inputs:
-                command: init
-                backendType: azurerm
-                backendServiceArm: 'eteo-akademia-devops_test-dev'
-                ensureBackend: true
-                backendAzureRmResourceGroupName: 'Akademia1'
-                backendAzureRmResourceGroupLocation: 'West Europe'
-                backendAzureRmStorageAccountName: 'jancsostorage02'
-                backendAzureRmContainerName: 'content'
-                backendAzureRmKey: terraform.tfstate
-
-          - task: TerraformCLI
-              displayName: 'terraform apply'
-              inputs:
-                command: apply -var="textlength=10"
-                environmentServiceName: 'eteo-akademia-devops_test-dev'
+          - checkout: self
+          - task: TerraformInstaller@0
+            displayName: 'install'
+            inputs:
+              terraformVersion: '0.13.4'
+          - task: TerraformTaskV1@0
+            displayName: 'init'
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'eteo-akademia-devops_test-dev'
+              backendAzureRmResourceGroupName: 'Akademia1'
+              backendAzureRmStorageAccountName: 'jancsostorage02'
+              backendAzureRmContainerName: 'content'
+              backendAzureRmKey: 'terraform.tfstate'
+          - task: TerraformTaskV1@0
+            displayName: 'plan'
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              commandOptions: '-var="textlength=10"'
+              environmentServiceNameAzureRM: 'tamopstf'
