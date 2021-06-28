@@ -58,4 +58,4 @@ stages :
               provider: 'azurerm'
               command: 'plan'
               commandOptions: '-var="textlength=10"'
-              environmentServiceNameAzureRM: 'tamopstf'
+              environmentServiceNameAzureRM: 'eteo-akademia-devops_test-dev'
