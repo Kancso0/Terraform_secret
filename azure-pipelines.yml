@@ -6,21 +6,21 @@ pool:
 
 
 stages :
-  - stage: install terraform
+  - stage: 'install terraform'
     jobs:
-      - job: install
+      - job: 'install'
         continueOnError: false
         steps:
-          - task: TerraformInstaller
+          - task: TerraformInstaller@0
               displayName: 'install terraform'
               inputs:
                 terraformVersion: latest
 
-  - stage: terraform init
+  - stage: 'terraform init'
     jobs:
-      - job: init
+      - job: 'init'
         steps:
-          - task: TerraformCLI
+          - task: TerraformCLI@0
               displayName: 'terraform init'
               inputs:
                 command: init
