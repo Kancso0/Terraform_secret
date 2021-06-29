@@ -57,5 +57,5 @@ stages :
             inputs:
               provider: 'azurerm'
               command: 'plan'
-              commandOptions: '-var="textlength=10"'
+              commandOptions: '-var="textlength=13"'
               environmentServiceNameAzureRM: 'eteo-akademia-devops_test-dev'
