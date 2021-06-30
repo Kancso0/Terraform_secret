@@ -22,7 +22,7 @@ stages :
               command: 'init'
               backendServiceArm: 'eteo-akademia-devops_test-dev'
               backendAzureRmResourceGroupName: 'Akademia1'
-              backendAzureRmStorageAccountName: 'jancsostorage02'
+              backendAzureRmStorageAccountName: 'jancsostoragedevops'
               backendAzureRmContainerName: 'content'
               backendAzureRmKey: 'terraform.tfstate'
           - task: TerraformTaskV1@0
@@ -49,7 +49,7 @@ stages :
               command: 'init'
               backendServiceArm: 'eteo-akademia-devops_test-dev'
               backendAzureRmResourceGroupName: 'Akademia1'
-              backendAzureRmStorageAccountName: 'jancsostorage02'
+              backendAzureRmStorageAccountName: 'jancsostoragedevops'
               backendAzureRmContainerName: 'content'
               backendAzureRmKey: 'terraform.tfstate'
           - task: TerraformTaskV1@0
