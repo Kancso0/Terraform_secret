@@ -59,3 +59,10 @@ stages :
               command: 'plan'
               commandOptions: '-var="textlength=13"'
               environmentServiceNameAzureRM: 'eteo-akademia-devops_test-dev'
+          - task: TerraformTaskV1@0
+              displayName: 'apply'
+              inputs:
+                provider: 'azurerm'
+                command: 'apply'
+                commandOptions: '-auto-approve -var="textlength=13"'
+                environmentServiceNameAzureRM: 'eteo-akademia-devops_test-dev'
